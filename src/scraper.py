@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()  # Load .env variables
+load_dotenv()  # Load to load .env variables
 
 def get_so_answer(error: str) -> str:
     """Fetch top answer using Stack Overflow API."""
