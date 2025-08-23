@@ -196,3 +196,78 @@ body {
         font-size: 1rem;
     }
 }
+/* About Page Styles */
+.about-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.about-section h2 {
+    color: #4f46e5;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.about-section ol, .about-section ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-section li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.developer-links {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.link-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+}
+
+.about-section a:not(.link-btn) {
+    color: #4f46e5;
+    text-decoration: none;
+}
+
+.about-section a:not(.link-btn):hover {
+    text-decoration: underline;
+}
+
+/* Responsive design for about page */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .developer-links {
+        flex-direction: column;
+    }
+    
+    .link-btn {
+        text-align: center;
+    }
+}
