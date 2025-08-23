@@ -11,6 +11,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 import logging
 from scraper import get_so_answer
+from starlette.responses import Response
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -125,7 +126,7 @@ async def health_check():
 @app.get("/favicon.ico")
 async def favicon():
     """Avoid favicon errors."""
-    return JSONResponse(status_code=204)
+    return JSONResponse(content=None, status_code=204)
 
 # Additional routes for better UX
 @app.get("/about")
