@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackSniper - Debug Errors Instantly</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 StackSniper</h1>
+            <p>Paste your error message and get instant solutions from Stack Overflow</p>
+        </header>
+
+        <main class="main-content">
+            <div class="input-section">
+                <textarea 
+                    id="errorInput" 
+                    placeholder="Paste your error message here...&#10;Example: NameError: name 'x' is not defined"
+                    rows="4"
+                ></textarea>
+                <button id="snipeBtn" onclick="getSolution()">Snipe Solution</button>
+            </div>
+
+            <div class="result-section" id="resultSection" style="display: none;">
+                <div class="result-header">
+                    <h3>Top Solution</h3>
+                    <div class="loader" id="loader"></div>
+                </div>
+                <div class="result-content" id="resultContent">
+                    <!-- Results will appear here -->
+                </div>
+            </div>
+
+            <div class="error-message" id="errorMessage" style="display: none;"></div>
+        </main>
+
+        <footer class="footer">
+            <p>Powered by Stack Overflow API • Built with FastAPI</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
