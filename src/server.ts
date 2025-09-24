@@ -1,9 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-//import { logSuccess } from './utils/logger.js';
-//import { getSolution } from './controllers/snipe.js';
-
+import { logSuccess } from "../src/utils/logger"
+import snipeRoutes from "../src/routers/route"
 dotenv.config();
 
 const app = express();
@@ -20,8 +19,13 @@ app.get('/', (req, res) => {
   });
 });
 
-//app.get('/api/snipe', getSolution);
+app.get('/api/snipe', snipeRoutes);
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`, 'Server');
+  logSuccess(`Server running on http://localhost:${PORT}`, 'Server');
 });

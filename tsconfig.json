@@ -3,7 +3,7 @@
     "module": "ES2022",
     "moduleResolution": "node",
     "outDir": "dist",
-    "rootDir": "app",
+    "rootDir": "src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -12,6 +12,6 @@
     "declarationMap": true,
     "sourceMap": true
   },
-  "include": ["app/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
