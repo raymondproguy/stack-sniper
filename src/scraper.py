@@ -25,8 +25,7 @@ def get_so_answer(error: str) -> str:
         "site": "stackoverflow",
         "key": api_key,
         "pagesize": 3,  # Get more results to find better matches
-        "answers": 1,    # Only questions with answers
-        "filter": "!-*jbN(9eSgKQv"
+        "answers": 1    # Only questions with answers
     }
     
     try:

@@ -3,37 +3,25 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.exceptions import RequestValidationError
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
-from slowapi.middleware import SlowAPIMiddleware
 import logging
 from scraper import get_so_answer
-from starlette.responses import Response
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
-#app = FastAPI(
+app = FastAPI(
     title="StackSniper",
     version="1.0.0",
     description="Instant Stack Overflow solutions for error messages",
-    docs_url="/docs",  # Enable API docs
-    redoc_url=None     # Disable Redoc
+    docs_url="/docs",
+    redoc_url=None
 )
 
-# Initialize rate limiter
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-#app.add_middleware(SlowAPIMiddleware)
-
-# Add security middleware
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])  # Adjust for production
-#app.add_middleware(GZipMiddleware, minimum_size=1000)
+# Add security middleware (SIMPLIFIED - no GZip)
+#app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
 # Mount static files and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -57,17 +45,6 @@ async def server_error_handler(request: Request, exc: Exception):
         status_code=500
     )
 
-@app.exception_handler(RateLimitExceeded)
-async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-    return JSONResponse(
-        status_code=429,
-        content={
-            "success": False,
-            "error": "Rate limit exceeded",
-            "solution": "Please wait a minute before making more requests."
-        }
-    )
-
 @app.exception_handler(RequestValidationError)
 async def validation_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
@@ -85,11 +62,9 @@ async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/api/snipe")
-@limiter.limit("10/minute")  # Rate limiting: 10 requests per minute
 async def snipe(request: Request, error: str):
     """
     API endpoint to fetch Stack Overflow solutions.
-    Now with rate limiting and better error handling.
     """
     if not error or len(error.strip()) < 2:
         raise HTTPException(
@@ -97,9 +72,7 @@ async def snipe(request: Request, error: str):
             detail="Error query must be at least 2 characters long."
         )
     
-    # Clean the input
     clean_error = error.strip()
-    
     logger.info(f"Processing error: {clean_error}")
     
     try:
@@ -110,7 +83,7 @@ async def snipe(request: Request, error: str):
             "solution": answer
         }
     except HTTPException:
-        raise  # Re-raise HTTP exceptions
+        raise
     except Exception as e:
         logger.error(f"Unexpected error processing '{clean_error}': {str(e)}")
         raise HTTPException(
@@ -128,7 +101,6 @@ async def favicon():
     """Avoid favicon errors."""
     return JSONResponse(content=None, status_code=204)
 
-# Additional routes for better UX
 @app.get("/about")
 async def about(request: Request):
     """About page."""
