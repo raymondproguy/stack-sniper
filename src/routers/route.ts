@@ -1,7 +1,11 @@
 import { Router } from 'express';
+import { snipeController } from '../controller/snipe';
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get("/snipe", snipeController)
+
+/*
+router.get('/snipe', (req, res) => {
     const error = req.query.error;
     
     console.log('Received error:', error);
@@ -16,4 +20,5 @@ router.get('/', (req, res) => {
     });
 });
 
+*/
 export default router;
