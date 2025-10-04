@@ -11,7 +11,6 @@ const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 
-// Routes - LSP helps with express app methods
 app.get('/', (req, res) => {
   res.json({
     message: '🚀 StackSniper API',
@@ -19,7 +18,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/api/snipe', snipeRoutes);
+app.use('/api', snipeRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
