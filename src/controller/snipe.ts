@@ -1,8 +1,8 @@
 import { validateError } from '../utils/helpers.js';
-import { searchStackOverflow } from '../services/stackoverflow.js';
+import { searchStackOverflow } from '../services/stackoverflow3.js';
 import { logInfo, logSuccess } from '../utils/logger.js';
 
-export async function snipeController(req, res) {
+export async function snipeController(req, res)  {
   const startTime = Date.now();
   
   try {
