@@ -1,8 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { logSuccess } from "../src/utils/logger"
-import snipeRoutes from "../src/routers/route"
+import { logSuccess } from "../src/utils/logger";
+import snipeRoutes from "../src/routers/route";
+import aiRoute from "../src/routers/deepseek.route";
 dotenv.config();
 
 const app = express();
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', snipeRoutes);
+app.use('/api/ai', aiRoute);
 
 // Health check
 app.get('/health', (req, res) => {

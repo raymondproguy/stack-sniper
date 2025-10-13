@@ -1,9 +1,10 @@
+import { Request, Response } from "express";
 import { DeepSeekService } from '../services/deepseek.js';
 import { logInfo, logError } from '../utils/logger.js';
 
 const deepseek = new DeepSeekService();
 
-export async function debugController(req, res) {
+export async function debugController(req: Request, res: Response) {
   try {
     const { error, code } = req.query;
     
@@ -25,7 +26,7 @@ export async function debugController(req, res) {
       source: 'DeepSeek AI'
     });
     
-  } catch (error) {
+  } catch (error:any) {
     logError(`AI Debug failed: ${error.message}`, 'AIController');
     res.status(500).json({
       success: false,
@@ -34,7 +35,7 @@ export async function debugController(req, res) {
   }
 }
 
-export async function reviewController(req, res) {
+export async function reviewController(req: Request, res:Response) {
   try {
     const { code } = req.query;
     
@@ -55,7 +56,7 @@ export async function reviewController(req, res) {
       source: 'DeepSeek AI'
     });
     
-  } catch (error) {
+  } catch (error:any) {
     logError(`AI Review failed: ${error.message}`, 'AIController');
     res.status(500).json({
       success: false,
@@ -64,7 +65,7 @@ export async function reviewController(req, res) {
   }
 }
 
-export async function rewriteController(req, res) {
+export async function rewriteController(req: Request, res:Response) {
   try {
     const { code, instructions } = req.query;
     
@@ -86,7 +87,7 @@ export async function rewriteController(req, res) {
       source: 'DeepSeek AI'
     });
     
-  } catch (error) {
+  } catch (error:any) {
     logError(`AI Rewrite failed: ${error.message}`, 'AIController');
     res.status(500).json({
       success: false,

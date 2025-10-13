@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { debugController, reviewController, rewriteController } from '../controllers/aiController.js';
+import { debugController, reviewController, rewriteController } from '../controller/deepseek.controller';
 
 const router = Router();
 
