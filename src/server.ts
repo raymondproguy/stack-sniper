@@ -14,7 +14,13 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({
     message: '🚀 StackSniper API',
-    usage: 'GET /api/snipe?error=YOUR_ERROR'
+
+    usage: {
+     stackOverflow: 'GET /api/snipe?error=YOUR_ERROR',
+    aiDebug: 'GET /api/ai/debug?error=ERROR&code=OPTIONAL_CODE',
+      aiReview: 'GET /api/ai/review?code=YOUR_CODE',
+    aiRewrite: 'GET /api/ai/rewrite?code=CODE&instructions=OPTIONAL'
+    }
   });
 });
 
