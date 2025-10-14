@@ -1,23 +1,22 @@
 import axios from 'axios';
 import { logInfo, logError, logSuccess } from '../utils/logger.js';
 
-const OPENROUTER_API_KEY = process.env.DEEPSEEK_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'deepseek/deepseek-coder';
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
 export class DeepSeekService {
   async query(prompt, context = '') {
     try {
-      logInfo('Sending request to OpenRouter...', 'DeepSeekService');
+      logInfo('Sending request to DeepSeek API...', 'DeepSeekService');
       
-      if (!OPENROUTER_API_KEY) {
-        throw new Error('OpenRouter API key not configured');
+      if (!DEEPSEEK_API_KEY) {
+        throw new Error('DeepSeek API key not configured');
       }
 
       const response = await axios.post(
-        OPENROUTER_URL,
+        DEEPSEEK_URL,
         {
-          model: MODEL,
+          model: 'deepseek-chat', // Official DeepSeek model
           messages: [
             {
               role: 'system',
@@ -29,24 +28,23 @@ export class DeepSeekService {
             }
           ],
           max_tokens: 1000,
-          temperature: 0.3
+          temperature: 0.3,
+          stream: false
         },
         {
           headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': 'http://localhost:5000',
-            'X-Title': 'StackSniper'
+            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+            'Content-Type': 'application/json'
           },
           timeout: 30000
         }
       );
 
-      logSuccess('OpenRouter response successful', 'DeepSeekService');
+      logSuccess('DeepSeek API response successful', 'DeepSeekService');
       return response.data.choices[0].message.content;
       
     } catch (error) {
-      logError(`OpenRouter API Error: ${error.response?.data?.message || error.message}`, 'DeepSeekService');
+      logError(`DeepSeek API Error: ${error.response?.data?.message || error.message}`, 'DeepSeekService');
       throw new Error('AI service unavailable');
     }
   }
