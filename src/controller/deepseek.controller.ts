@@ -95,3 +95,42 @@ export async function rewriteController(req: Request, res:Response) {
     });
   }
 }
+
+export async function explainController(req, res) {
+    try {
+        const { concept } = req.query;
+        
+        // Validate input
+        if (!concept) {
+            return res.status(400).json({
+                success: false,
+                error: 'Concept parameter is required'
+            });
+        }
+
+        if (concept.length < 2) {
+            return res.status(400).json({
+                success: false,
+                error: 'Concept must be at least 2 characters long'
+            });
+        }
+
+        logInfo(`AI Explain: ${concept}`, 'AIController');
+        
+        const explanation = await deepseek.explainConcept(concept);
+        
+        res.json({
+            success: true,
+            concept: concept,
+            explanation: explanation,
+            source: 'DeepSeek AI'
+        });
+        
+    } catch (error:any) {
+        logError(`AI Explain failed: ${error.message}`, 'AIController');
+        res.status(500).json({
+            success: false,
+            error: 'AI service unavailable'
+        });
+    }
+}
