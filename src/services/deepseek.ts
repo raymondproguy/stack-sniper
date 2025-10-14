@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { logInfo, logError, logSuccess } from '../utils/logger.js';
 
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = process.env.DEEPSEEK_API_KEY;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'deepseek/deepseek-r1'; // ← FREE CODER MODEL
 
