@@ -1,26 +1,23 @@
 import axios from 'axios';
 import { logInfo, logError, logSuccess } from '../utils/logger.js';
 
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
+const OPENROUTER_API_KEY = "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";
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const MODEL = 'deepseek/deepseek-r1'; // ← FREE CODER MODEL
 
 export class DeepSeekService {
   async query(prompt, context = '') {
     try {
-      logInfo('Sending request to DeepSeek API...', 'DeepSeekService');
-      
-      if (!DEEPSEEK_API_KEY) {
-        throw new Error('DeepSeek API key not configured');
-      }
+      logInfo('Sending request to OpenRouter...', 'DeepSeekService');
 
       const response = await axios.post(
-        DEEPSEEK_URL,
+        OPENROUTER_URL,
         {
-          model: 'deepseek-chat', // Official DeepSeek model
+          model: MODEL,
           messages: [
             {
               role: 'system',
-              content: 'You are an expert programming assistant. Provide clear, concise, and helpful responses.'
+              content: 'You are an expert programming assistant specializing in debugging, code review, and programming concepts.  Provide clear, concise responses in PLAIN TEXT only. NO markdown, NO code blocks, NO asterisks, NO backticks, NO bold/italic formatting. Use simple plain text with regular line breaks.'
             },
             {
               role: 'user',
@@ -28,28 +25,29 @@ export class DeepSeekService {
             }
           ],
           max_tokens: 1000,
-          temperature: 0.3,
-          stream: false
+          temperature: 0.3
         },
         {
           headers: {
-            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'http://localhost:5000',
+            'X-Title': 'StackSniper'
           },
           timeout: 30000
         }
       );
 
-      logSuccess('DeepSeek API response successful', 'DeepSeekService');
+      logSuccess('OpenRouter response successful', 'DeepSeekService');
       return response.data.choices[0].message.content;
       
     } catch (error) {
-      logError(`DeepSeek API Error: ${error.response?.data?.message || error.message}`, 'DeepSeekService');
+      logError(`OpenRouter API Error: ${error.response?.data?.message || error.message}`, 'DeepSeekService');
       throw new Error('AI service unavailable');
     }
   }
 
-  async debugError(error, codeSnippet = '') {
+ async debugError(error, codeSnippet = '') {
     const prompt = `Debug this error and provide a solution: ${error}`;
     const context = codeSnippet ? `Here's the relevant code:\n${codeSnippet}\n\n` : '';
     return this.query(prompt, context);
