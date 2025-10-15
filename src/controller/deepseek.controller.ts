@@ -4,6 +4,17 @@ import { logInfo, logError } from '../utils/logger.js';
 
 const deepseek = new DeepSeekService();
 
+function cleanAIResponse(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1') // Remove **bold**
+    .replace(/\*(.*?)\*/g, '$1')     // Remove *italic*  
+    .replace(/`(.*?)`/g, '$1')       // Remove `code`
+    .replace(/```[\s\S]*?```/g, '')  // Remove code blocks
+    .replace(/#+\s*/g, '')           // Remove headers
+    .replace(/\n\s*\n/g, '\n\n')     // Clean up line breaks
+    .trim();
+}
+
 export async function debugController(req: Request, res: Response) {
   try {
     const { error, code } = req.query;
