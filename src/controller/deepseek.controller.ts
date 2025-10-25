@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { DeepSeekService } from '../services/deepseek.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { User } from "../models/User.model.js";
 import { History } from '../models/History.model.js';
 import { HistoryService } from '../history/history.service.js';
 
@@ -46,8 +47,8 @@ export async function debugController(req:Request, res:Response) {
        metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanAIResponse, responseTime);
-      }
+        tokensUsed: estimateTokens(cleanAIResponse);
+   }, responseTime
     });
 
         res.json({
@@ -58,7 +59,7 @@ export async function debugController(req:Request, res:Response) {
             responseTime
         });
         
-    } catch (error) {
+    } catch (error:any) {
         logError(`AI Debug failed: ${error.message}`, 'AIController');
         res.status(500).json({
             success: false,
@@ -67,12 +68,13 @@ export async function debugController(req:Request, res:Response) {
     }
 }
 
-export async function reviewController(req, res) {
+export async function reviewController(req:Request, res:Response) {
+  const startTime = Date.now();
     try {
         const { code } = req.query;
         
         if (!code) {
-            return res.status(400).json({
+            return res.staitus(400).json({
                 success: false,
                 error: 'Code parameter is required'
             });
@@ -82,10 +84,11 @@ export async function reviewController(req, res) {
         
         const review = await deepseek.reviewCode(code);
         const cleanReview = cleanAIResponse(review);
+        const responseTime = Date.now - startTime;
 
         // Save to history
     await historyService.saveHistory({
-      userId: req.user.uid, // Add this when you integrate auth
+      userId: req.user.uid, 
       feature: 'review',
       query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
       response: cleanResponse,
@@ -93,14 +96,15 @@ export async function reviewController(req, res) {
       metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanResponse)
-      }
+        tokensUsed: estimateTokens(cleanAIResponse);
+      }, responseTime
     });
         
         res.json({
             success: true,
             review: cleanReview,
-            source: 'DeepSeek AI'
+            source: 'DeepSeek AI',
+            responseTime
         });
         
     } catch (error) {
@@ -112,7 +116,8 @@ export async function reviewController(req, res) {
     }
 }
 
-export async function rewriteController(req, res) {
+export async function rewriteController(req:Request, res:Response) {
+  const startTime = Date.now();
     try {
         const { code, instructions } = req.query;
         
@@ -127,6 +132,7 @@ export async function rewriteController(req, res) {
         
         const rewritten = await deepseek.rewriteCode(code, instructions);
         const cleanRewritten = cleanAIResponse(rewritten);
+        const responseTime = Date.now - startTime;
 
         // Save to history
     await historyService.saveHistory({
@@ -138,15 +144,16 @@ export async function rewriteController(req, res) {
       metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanResponse)
-      }
+        tokensUsed: estimateTokens(cleanAIResponse);
+      }, responseTime
     });
         
         res.json({
             success: true,
             original: code,
             rewritten: cleanRewritten,
-            source: 'DeepSeek AI'
+            source: 'DeepSeek AI',
+            responseTime
         });
         
     } catch (error) {
@@ -158,7 +165,8 @@ export async function rewriteController(req, res) {
     }
 }
 
-export async function explainController(req, res) {
+export async function explainController(req:Request, res:Response) {
+  const startTime = Date.now();
     try {
         const { concept } = req.query;
         
@@ -173,6 +181,7 @@ export async function explainController(req, res) {
         
         const explanation = await deepseek.explainConcept(concept);
         const cleanExplanation = cleanAIResponse(explanation);
+        const responseTime = Date.now - startTime;
 
         // Save to history
     await historyService.saveHistory({
@@ -184,15 +193,16 @@ export async function explainController(req, res) {
       metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanResponse)
-      }
+        tokensUsed: estimateTokens(cleanAIResponse);
+      }, responseTime
     });
         
         res.json({
             success: true,
             concept: concept,
             explanation: cleanExplanation,
-            source: 'DeepSeek AI'
+            source: 'DeepSeek AI',
+            responseTime
         });
         
     } catch (error) {
