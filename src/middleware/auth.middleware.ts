@@ -32,9 +32,21 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.user?.isAdmin) {
-    return res.status(403).json({ success: false, error: 'Admin access required' });
+export const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
+
+    // Check if user is admin
+    const user = await User.findOne({ uid: req.user.uid });
+    
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ success: false, error: 'Admin access required' });
+    }
+    
+    next();
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Authorization check failed' });
   }
-  next();
 };
