@@ -96,3 +96,22 @@ export class HistoryService {
     }
   }
 }
+
+async saveHistoryWithPerformance(historyData: Omit<IHistory, 'timestamp'>, responseTime: number) {
+  try {
+    const history = new History({
+      ...historyData,
+      metadata: {
+        ...historyData.metadata,
+        responseTime
+      }
+    });
+    
+    await history.save();
+    logInfo(`History saved with performance data for user: ${historyData.userId}`, 'HistoryService');
+    return history;
+  } catch (error) {
+    logError(`Error saving history with performance: ${error}`, 'HistoryService');
+    throw error;
+  }
+}
