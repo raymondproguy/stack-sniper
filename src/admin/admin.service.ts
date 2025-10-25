@@ -283,3 +283,58 @@ export class AdminService {
     return `${days}d ${hours}h ${minutes}m`;
   }
 }
+
+async getFeatureUsageByTime(days: number = 7) {
+  try {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    const result = await History.aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            feature: '$feature',
+            date: {
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: '$timestamp'
+              }
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id.feature',
+          dailyUsage: {
+            $push: {
+              date: '$_id.date',
+              count: '$count'
+            }
+          },
+          total: { $sum: '$count' }
+        }
+      },
+      {
+        $project: {
+          feature: '$_id',
+          dailyUsage: 1,
+          total: 1,
+          _id: 0
+        }
+      },
+      { $sort: { total: -1 } }
+    ]);
+
+    return result;
+  } catch (error) {
+    logError(`Error getting feature usage by time: ${error}`, 'AdminService');
+    throw error;
+  }
+}
