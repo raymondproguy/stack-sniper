@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
     aiRewrite: 'GET /api/ai/rewrite?code=CODE&instructions=OPTIONAL'
     }
   });
+  logSuccess(`Root endpoint accessed`, 'Root')
 });
 
 app.use('/api', snipeRoutes);
@@ -31,6 +32,7 @@ app.use('/api/ai', aiRoute);
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  logSuccess(`Health check`, 'Health');
 });
 
 app.listen(PORT, () => {
