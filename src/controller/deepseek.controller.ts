@@ -1,23 +1,25 @@
+import { Request, Response } from "express";
 import { DeepSeekService } from '../services/deepseek.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { History } from '../models/History.model.js';
 import { HistoryService } from '../history/history.service.js';
 
 const deepseek = new DeepSeekService();
-const historyService = new HistoryService():
+const historyService = new HistoryService();
 
 // Cleanup function
-function cleanAIResponse(text) {
+function cleanAIResponse(text:any) {
   return text
     .replace(/\*\*/g, '')           // Remove **bold**
     .replace(/\*/g, '')             // Remove *italic*  
     .replace(/`/g, '')              // Remove `code`
     .replace(/#{1,6}\s?/g, '')      // Remove headers
     .replace(/\n{3,}/g, '\n\n')     // Limit consecutive newlines
-    .trim();
+    .trim();                        // Remove extra white space
 }
 
-export async function debugController(req, res) {
+export async function debugController(req:Request, res:Response) {
+  const startTime = Date.now();
     try {
         const { error, code } = req.query;
         
@@ -32,18 +34,19 @@ export async function debugController(req, res) {
         
         const solution = await deepseek.debugError(error, code);
         const cleanSolution = cleanAIResponse(solution);
+        const responseTime = Date.now - startTime;
        
         // Save to history
-      await historyService.saveHistory({
-       userId: req.user.uid, // Add this when you integrate auth
+      await historyService.saveHistoryWithPerformance({
+       userId: req.user.uid, 
        feature: 'debug',
        query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
-       response: cleanResponse,
+       response: cleanAIResponse,
        source: 'ai',
        metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanResponse)
+        tokensUsed: estimateTokens(cleanAIResponse, responseTime);
       }
     });
 
@@ -51,7 +54,8 @@ export async function debugController(req, res) {
             success: true,
             error: error,
             solution: cleanSolution,
-            source: 'DeepSeek AI'
+            source: 'DeepSeek AI',
+            responseTime
         });
         
     } catch (error) {
