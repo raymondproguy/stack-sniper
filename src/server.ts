@@ -4,7 +4,12 @@ import dotenv from 'dotenv';
 import { logSuccess } from "../src/utils/logger";
 import snipeRoutes from "../src/routers/route";
 import aiRoute from "../src/routers/deepseek.route";
+import { connectDB } from './config/database';
+import authRoutes from "../src/auth/auth.route";
+import historyRoutes from "../src/history/history.routes";
+
 dotenv.config();
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -28,6 +33,8 @@ app.get('/', (req, res) => {
 
 app.use('/api', snipeRoutes);
 app.use('/api/ai', aiRoute);
+app.use('api/auth', authRoutes);
+app.use('api/history', historyRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
