@@ -1,7 +1,10 @@
 import { DeepSeekService } from '../services/deepseek.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { History } from '../models/History.model.js';
+import { HistoryService } from '../history/history.service.js';
 
 const deepseek = new DeepSeekService();
+const historyService = new HistoryService():
 
 // Cleanup function
 function cleanAIResponse(text) {
@@ -29,7 +32,21 @@ export async function debugController(req, res) {
         
         const solution = await deepseek.debugError(error, code);
         const cleanSolution = cleanAIResponse(solution);
-        
+       
+        // Save to history
+      await historyService.saveHistory({
+       userId: req.user.uid, // Add this when you integrate auth
+       feature: 'debug',
+       query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
+       response: cleanResponse,
+       source: 'ai',
+       metadata: {
+        errorType: extractErrorType(error),
+        codeLanguage: 'javascript', // You can detect this
+        tokensUsed: estimateTokens(cleanResponse)
+      }
+    });
+
         res.json({
             success: true,
             error: error,
@@ -61,6 +78,20 @@ export async function reviewController(req, res) {
         
         const review = await deepseek.reviewCode(code);
         const cleanReview = cleanAIResponse(review);
+
+        // Save to history
+    await historyService.saveHistory({
+      userId: req.user.uid, // Add this when you integrate auth
+      feature: 'review',
+      query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
+      response: cleanResponse,
+      source: 'ai',
+      metadata: {
+        errorType: extractErrorType(error),
+        codeLanguage: 'javascript', // You can detect this
+        tokensUsed: estimateTokens(cleanResponse)
+      }
+    });
         
         res.json({
             success: true,
@@ -92,6 +123,20 @@ export async function rewriteController(req, res) {
         
         const rewritten = await deepseek.rewriteCode(code, instructions);
         const cleanRewritten = cleanAIResponse(rewritten);
+
+        // Save to history
+    await historyService.saveHistory({
+      userId: req.user.uid, // Add this when you integrate auth
+      feature: 'rewrite',
+      query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
+      response: cleanResponse,
+      source: 'ai',
+      metadata: {
+        errorType: extractErrorType(error),
+        codeLanguage: 'javascript', // You can detect this
+        tokensUsed: estimateTokens(cleanResponse)
+      }
+    });
         
         res.json({
             success: true,
@@ -124,6 +169,20 @@ export async function explainController(req, res) {
         
         const explanation = await deepseek.explainConcept(concept);
         const cleanExplanation = cleanAIResponse(explanation);
+
+        // Save to history
+    await historyService.saveHistory({
+      userId: req.user.uid, // Add this when you integrate auth
+      feature: 'explain',
+      query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
+      response: cleanResponse,
+      source: 'ai',
+      metadata: {
+        errorType: extractErrorType(error),
+        codeLanguage: 'javascript', // You can detect this
+        tokensUsed: estimateTokens(cleanResponse)
+      }
+    });
         
         res.json({
             success: true,
