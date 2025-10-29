@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "node --loader tsx src/index.ts"
+    "start": "node --loader tsx src/index.ts",
+    "create-admin": "tsx scripts/createAdmin.ts"
   },
   "dependencies": {
     "axios": "^1.5.0",
