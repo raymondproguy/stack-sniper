@@ -1,7 +1,7 @@
 // src/controller/snipe.ts
 import { Request, Response } from 'express';
 import { validateError } from '../utils/helpers.js';
-import { searchStackOverflow } from '../services/stackoverflow4.js';
+import { searchStackOverflow } from '../services/stackoverflow5.js';
 import { logInfo, logSuccess, logError } from '../utils/logger.js';
 import { HistoryService } from '../history/history.service.js';
 

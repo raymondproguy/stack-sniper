@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { snipeController } from '../controller/snipe';
+import { snipeController } from '../controller/snipe2';
 const router = Router();
 
 router.get("/snipe", snipeController)

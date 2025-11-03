@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DeepSeekService } from '../services/deepseek.js';
+import { estimateTokens, extractErrorType, cleanAIResponse } from "../utils/aiHelpers.js"
 import { logInfo, logError } from '../utils/logger.js';
 import { User } from "../models/User.model.js";
 import { History } from '../models/History.model.js';
@@ -42,12 +43,12 @@ export async function debugController(req:Request, res:Response) {
        userId: req.user.uid, 
        feature: 'debug',
        query: `Error: ${error}${code ? `\nCode: ${code}` : ''}`,
-       response: cleanAIResponse,
+       response: cleanSolution,
        source: 'ai',
        metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanAIResponse);
+        tokensUsed: estimateTokens(cleanAIResponse)
    }, responseTime
     });
 
@@ -96,7 +97,7 @@ export async function reviewController(req:Request, res:Response) {
       metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanAIResponse);
+        tokensUsed: estimateTokens(cleanAIResponse)
       }, responseTime
     });
         
@@ -144,7 +145,7 @@ export async function rewriteController(req:Request, res:Response) {
       metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanAIResponse);
+        tokensUsed: estimateTokens(cleanAIResponse)
       }, responseTime
     });
         
@@ -193,7 +194,7 @@ export async function explainController(req:Request, res:Response) {
       metadata: {
         errorType: extractErrorType(error),
         codeLanguage: 'javascript', // You can detect this
-        tokensUsed: estimateTokens(cleanAIResponse);
+        tokensUsed: estimateTokens(cleanAIResponse)
       }, responseTime
     });
         

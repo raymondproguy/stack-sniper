@@ -1,4 +1,4 @@
-rt axios from 'axios';
+import axios from 'axios';
 import { logInfo, logError } from '../utils/logger.js';
 import { cleanHtml } from '../utils/helpers.js';
 

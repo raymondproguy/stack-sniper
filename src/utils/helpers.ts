@@ -27,6 +27,7 @@ export function cleanHtml(html:any) {
   return text.trim();
 }
 
+/*
 export function validateError(error:any) {
   if (!error) {
     return 'Error parameter is required';
@@ -45,4 +46,37 @@ export function validateError(error:any) {
   }
   
   return null; // No error
+}
+*/
+
+export function validateError(error: string): string | null {
+  if (!error || typeof error !== 'string') {
+    return 'Error parameter is required and must be a string';
+  }
+  
+  if (error.trim().length < 5) {
+    return 'Error message must be at least 5 characters long';
+  }
+  
+  if (error.length > 500) {
+    return 'Error message too long (max 500 characters)';
+  }
+  
+  // Check if it looks like a real error
+  const looksLikeError = 
+    /error/i.test(error) ||
+    /exception/i.test(error) ||
+    /is not defined/i.test(error) ||
+    /cannot read/i.test(error) ||
+    /undefined/i.test(error) ||
+    /null/i.test(error) ||
+    /syntaxerror/i.test(error) ||
+    /typeerror/i.test(error) ||
+    /referenceerror/i.test(error);
+  
+  if (!looksLikeError) {
+    return 'Please provide a valid error message or exception';
+  }
+  
+  return null;
 }
