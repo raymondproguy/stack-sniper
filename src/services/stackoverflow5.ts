@@ -82,7 +82,7 @@ export async function searchStackOverflow(error: string): Promise<string | null>
 
     const response = await axios.get(
       `https://api.stackexchange.com/2.3/search/advanced?${params}`,
-      { timeout: 10000 }
+      { timeout: 15000 }
     );
 
     const items = response.data.items || [];
@@ -134,7 +134,7 @@ export async function searchStackOverflow(error: string): Promise<string | null>
 
     const answerResponse = await axios.get(
       `https://api.stackexchange.com/2.3/questions/${question.question_id}/answers?${answerParams}`,
-      { timeout: 10000 }
+      { timeout: 15000 }
     );
 
     const answers = answerResponse.data.items || [];
