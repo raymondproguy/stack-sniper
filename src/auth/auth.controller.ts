@@ -62,3 +62,30 @@ export const getProfile = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, error: 'Failed to get profile' });
   }
 };
+
+export async function login(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email and password are required'
+      });
+    }
+
+    // Note: For email/password auth, you'll need to use Firebase Client SDK on frontend
+    // This endpoint would typically handle custom token creation or direct Firebase auth
+    res.json({
+      success: true,
+      message: 'Use Firebase Client SDK for email/password authentication'
+    });
+
+  } catch (error: any) {
+    logError(`Login failed: ${error.message}`, 'AuthController');
+    res.status(500).json({
+      success: false,
+      error: 'Login failed'
+    });
+  }
+}

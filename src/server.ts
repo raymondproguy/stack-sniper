@@ -7,6 +7,7 @@ import aiRoute from "../src/routers/deepseek.route";
 import { connectDB } from './config/database';
 import authRoutes from "../src/auth/auth.route";
 import historyRoutes from "../src/history/history.routes";
+import stackSniperAiRoutes from "./routers/stack-sniper-ai.route";
 //import adminRouts from "../src/admin/admin.routes";
 
 dotenv.config();
@@ -36,6 +37,7 @@ app.use('/api', snipeRoutes);
 app.use('/api/ai', aiRoute);
 app.use('api/auth', authRoutes);
 app.use('api/history', historyRoutes);
+app.use('api/stackai', stackSniperAiRoutes);
 //app.use('api/admin', adminRouts);
 
 // Health check
