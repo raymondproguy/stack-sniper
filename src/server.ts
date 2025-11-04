@@ -4,13 +4,13 @@ import dotenv from 'dotenv';
 import { logSuccess } from "../src/utils/logger";
 import snipeRoutes from "../src/routers/route";
 import aiRoute from "../src/routers/deepseek.route";
-//import { connectDB } from './config/database';
+import { connectDB } from './config/database';
 import authRoutes from "../src/auth/auth.route";
 import historyRoutes from "../src/history/history.routes";
 //import adminRouts from "../src/admin/admin.routes";
 
 dotenv.config();
-//connectDB();
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
