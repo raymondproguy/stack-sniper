@@ -1,6 +1,6 @@
 // routes/stack-sniper-ai.routes.ts
 import { Router } from 'express';
-import { aiChatController, quickHelpController } from '../controllers/stack-sniper-ai.controller.js';
+import { aiChatController, quickHelpController } from '../controller/stack-sniper-ai.controller';
 import { authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
